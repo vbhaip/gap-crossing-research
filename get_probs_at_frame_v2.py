@@ -1,3 +1,7 @@
+# This file shows the utility of the classification system. It runs both of the models at intervals and outputs
+# the probability at each spot. This can be graphed to show the length of a bout and locations where there 
+# are gap-crossing events.
+
 import numpy as np
 import csv
 import cv2

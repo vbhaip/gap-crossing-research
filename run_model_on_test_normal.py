@@ -1,3 +1,5 @@
+# This file runs the optical flow model on the corresponding testing data
+
 import numpy as np
 from keras.models import Sequential, Model
 from keras.layers import Dense, Conv2D, Conv3D, Flatten, Dropout, MaxPooling2D, MaxPooling3D, Activation

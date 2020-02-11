@@ -1,3 +1,6 @@
+# The analysis file that is created by the get_probs_at_frame file stores information for the files. This reads
+# that information and allows for creating more concise meaningful stats. 
+
 import ast
 
 import numpy as np

@@ -1,3 +1,7 @@
+# This file creates the normal model and trains it on the corresponding training dataset. It saves the weights of
+# the model to a hdf5 file.
+
+
 import numpy as np
 from keras.models import Sequential, Model
 from keras.layers import Dense, Conv2D, Conv3D, Flatten, Dropout, MaxPooling2D, MaxPooling3D, Activation

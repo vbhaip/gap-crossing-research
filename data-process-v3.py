@@ -1,3 +1,7 @@
+# This file was used for reading information from the annotations file I created. It opens the video file
+# corresponding to each annotation I made, and saves clips of the videos according to the contextual information
+# that is set up. The data points are saved as numpy files and will be fed into a 3D CNN.
+
 import numpy as np
 import csv
 import cv2

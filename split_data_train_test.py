@@ -1,4 +1,6 @@
-#Run only once to sort out data
+#This file is run only once to sort out data. It randomly splits the data into training and testing data.
+
+
 import os, random
 from shutil import copy
 

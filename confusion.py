@@ -1,13 +1,14 @@
+# This file just generates a confusion matrix for the normal model. Just helpful to see how the model performs across 
+# different stats for false positive and false negatives
+
+
 import numpy as np
 from keras.models import Sequential, Model
 from keras.layers import Dense, Conv2D, Conv3D, Flatten, Dropout, MaxPooling2D, MaxPooling3D, Activation
 from keras import optimizers
-# from keras.preprocessing.image import ImageDataGenerator
 from keras.preprocessing.image import array_to_img, img_to_array, load_img
 import os
 import csv
-# from keras.applications.vgg16 import VGG16
-# model = VGG16()
 import cv2
 
 from keras.callbacks import ModelCheckpoint
@@ -118,7 +119,7 @@ model.add(Activation('relu'))
 model.add(Dense(2))
 model.add(Activation('softmax'))
 
-model.load_weights("weights-normal-v1/weights-03-0.84.hdf5")
+model.load_weights("weights/normal-0.84.hdf5")
 
 
 # sgd = optimizers.SGD(lr=100)

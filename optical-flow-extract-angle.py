@@ -1,3 +1,7 @@
+# This model deals with the bulk of the angle/center of mass calculation for the model. It gets summaries for 
+# videos on statistics regarding the amount of gap-crossing attempts and the lengths of each one.
+# It also implements techniques to try to fit an ellipse on the fly.
+
 import numpy as np
 import csv
 import cv2
