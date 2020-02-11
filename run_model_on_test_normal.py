@@ -4,12 +4,9 @@ import numpy as np
 from keras.models import Sequential, Model
 from keras.layers import Dense, Conv2D, Conv3D, Flatten, Dropout, MaxPooling2D, MaxPooling3D, Activation
 from keras import optimizers
-# from keras.preprocessing.image import ImageDataGenerator
 from keras.preprocessing.image import array_to_img, img_to_array, load_img
 import os
 import csv
-# from keras.applications.vgg16 import VGG16
-# model = VGG16()
 import cv2
 
 from keras.callbacks import ModelCheckpoint
@@ -38,7 +35,7 @@ for (dirpath, dirname, filenames) in os.walk("data-normal-v1"):
 	if len(filenames) > 1:
 
 		for filename in filenames:
-			# print(dirpath)
+
 			#train or validation
 			typ = dirpath.split("\\")[-2]
 
@@ -106,11 +103,8 @@ data = [X, y]
 model = Sequential()
 model.add(Conv3D(8, (2,2,2), input_shape=(frames_input, width, height, 1)))
 model.add(Activation('relu'))
-# model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
 model.add(Conv3D(4, (4,4,4)))
 model.add(Activation('relu'))
-# model.add(MaxPooling3D(pool_size=(2, 2, 2)))
-# model.add(Activation('relu'))
 model.add(Flatten())
 model.add(Dense(32))
 model.add(Activation('relu'))
@@ -121,8 +115,6 @@ model.add(Activation('softmax'))
 
 model.load_weights("weights/normal-0.84.hdf5")
 
-
-# sgd = optimizers.SGD(lr=100)
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
