@@ -2,6 +2,8 @@
 # videos on statistics regarding the amount of gap-crossing attempts and the lengths of each one.
 # It also implements techniques to try to fit an ellipse on the fly.
 
+
+import sys
 import numpy as np
 import csv
 import cv2
@@ -30,7 +32,23 @@ from matplotlib.colors import LogNorm
 
 import copy
 
+import argparse
 
+
+
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--saveimgs", help="save figures to files", action="store_true")
+parser.add_argument("--display", help="display any figures to the terminal (slows it down a lot)", action="store_true")
+parser.add_argument("--savevid", help="saves vid w/ center of mass drawn over", action="store_true")
+parser.add_argument("filename", type=str,
+                    help="specify avi file location to access")
+
+args = parser.parse_args()
+
+
+#just some random seed to keep it consistent when testing
 np.random.seed(1730)
 
 
@@ -116,7 +134,7 @@ def readVid(vid_name):
 
 		for framenum in range(0, int(cap.get(cv2.CAP_PROP_FRAME_COUNT))-FRAMEGAP*FRAMECTX-5, FRAME_MEASURE_LENGTH):
 			frames, frames2, avg_ang = saveDataPoint(cap, vid_name, framenum)
-			print(avg_ang)
+			# print(avg_ang)
 
 			if frames is not None:
 
@@ -139,19 +157,23 @@ def readVid(vid_name):
 				pred2 = model2.predict(frames2)
 				pred2 = pred2.tolist()[0]
 
-				print("Gap-crossing prediction: " + str((pred2[0] + pred[0])/2))
+				print("Gap-crossing prediction at frame " + str(framenum) + ": " + str((pred2[0] + pred[0])/2))
 
 				#if the average of the networks is above 50%, then we want to analyze this event
 				if(abs(pred2[0] + pred[0])/2.0 > 0.5):
-					print("event")
+					print("Predicted gap-crossing event at frame " + str(framenum))
 
 					# sets the video frame to 30 frames before the event location - this allows us to look at the
 					# nearby area when a gap-crossing event occurs
 					cap.set(1, framenum - 30)
 
 					# name is just a unique identifier to locate vids - it can be changed
-					name = "v2-rollavgcm-pc" + str(PERCENT_CUTOFF) + "-anglevid" + str((pred[0])) + "opt" + str((pred2[0])) + "--" + str(avg_ang)
-					new_vid = cv2.VideoWriter(name + ".avi", cv2.VideoWriter_fourcc(*'XVID'), 15.0, (int(cap.get(3)), int(cap.get(4))))
+					name = vid_name.split("/")[-1].split(".")[0] + "-accuracy-" + str(abs(pred2[0] + pred[0])/2.0) + "-angle-" + str(avg_ang)
+					
+
+					
+					if(args.savevid):
+						new_vid = cv2.VideoWriter(name + ".avi", cv2.VideoWriter_fourcc(*'XVID'), 15.0, (int(cap.get(3)), int(cap.get(4))))
 
 
 					# correspond to the center of masses according to each dimension across time
@@ -181,31 +203,33 @@ def readVid(vid_name):
 					genHisto2D(mag_list, name)
 
 
-					# creates a rolling average for the center of masses
-					x_roll = np.convolve(x_list, np.ones((5,))/5, mode='valid')
-					y_roll = np.convolve(y_list, np.ones((5,))/5, mode='valid')
-					count = 0
-					for x in range(framenum - 30, framenum + 30):
+					if(args.savevid):
 
-						if(x - framenum + 30 >= len(x_roll)):
-							break
+						# creates a rolling average for the center of masses
+						x_roll = np.convolve(x_list, np.ones((5,))/5, mode='valid')
+						y_roll = np.convolve(y_list, np.ones((5,))/5, mode='valid')
+						count = 0
+						for x in range(framenum - 30, framenum + 30):
 
-						cap.set(1, x)
-						ret, towrite = cap.read()
-						# cv2.imshow('frame', towrite)
-						# if cv2.waitKey(500) & 0xFF == ord('q'):
-						# 	break
-						cap.set(1,x)
+							if(x - framenum + 30 >= len(x_roll)):
+								break
 
-						# draws red dot on frame
-						for delx in range(-5,5):
-							for dely in range(-5, 5):
-								towrite[(int)(y_roll[x-framenum+30]) + dely, (int)(x_roll[x-framenum+30])+delx,...] = [0,0,255]
+							cap.set(1, x)
+							ret, towrite = cap.read()
+							# cv2.imshow('frame', towrite)
+							# if cv2.waitKey(500) & 0xFF == ord('q'):
+							# 	break
+							cap.set(1,x)
 
-						# writes frame to video
-						new_vid.write(towrite)
+							# draws red dot on frame
+							for delx in range(-5,5):
+								for dely in range(-5, 5):
+									towrite[(int)(y_roll[x-framenum+30]) + dely, (int)(x_roll[x-framenum+30])+delx,...] = [0,0,255]
 
-					new_vid.release()
+							# writes frame to video
+							new_vid.write(towrite)
+
+						new_vid.release()
 					# saveVidFromNPY(frames, "somevid" + str(avg_ang) + ".avi")
 
 	else:
@@ -363,22 +387,22 @@ def eigenEllipseFitting(matrix, name):
 	sigma = np.cov(datamod, rowvar = False)
 
 
-	print(sigma)
+	# print(sigma)
 	# print(len(sigma))
 
 	# recalculates center of mass based off traditional method - needed because eigenvectors give shape of ellipse but
 	# not location of the ellipse
 	mu = getCenterMass(matrix)
-	print("mu" + str(mu))
+	# print("mu" + str(mu))
 
 
 	# calculates the eigenvectors (evals is eigenvals and evecs is eigenvecs)
 	evals, evecs = la.eigh(sigma)
 
-	print(evals)
-	print(len(evals))
-	print(evecs)
-	print(len(evecs[0]))
+	# print(evals)
+	# print(len(evals))
+	# print(evecs)
+	# print(len(evecs[0]))
 
 
 	# gets theta value from eigenvectors
@@ -394,9 +418,15 @@ def eigenEllipseFitting(matrix, name):
 	ax.imshow(matrix)
 	plt.colorbar(ax.imshow(matrix))
 	ax.add_artist(Ellipse(mu, w, h, theta, fill=False))
-	plt.savefig(str(PERCENT_CUTOFF) + name + "non-weight.png")
 
-	plt.show()
+	plt.title("Ellipse Fitting on Augmented Optical Flow")
+
+	if(args.saveimgs):
+		plt.savefig(name + "-ellipse-fit.png")
+
+	if(args.display):
+		plt.show()
+		plt.clf()
 
 	
 
@@ -408,7 +438,21 @@ def genSumPlot(matrix, name):
 	flat = matrix.flatten()
 
 	histo = plt.hist(flat, bins=100, log=True)
-	plt.show()
+
+	plt.title("Cumulative Sum Plot for Opt Flow Magnitudes Across Contextual Frames")
+
+	plt.xlabel("Optical Flow Magnitude")
+
+	plt.ylabel("Number of occurrences")
+
+
+	if(args.saveimgs):
+		plt.savefig(name + "-sumplot.png")
+
+	if(args.display):
+		plt.show()
+
+		plt.clf()
 
 
 
@@ -452,7 +496,18 @@ def genHisto2D(matrix, name):
 	plt.imshow(histo_2d, cmap=my_cmap, norm=LogNorm())
 
 	plt.colorbar()
-	plt.show()
+
+	plt.title("2D Histogram of Optical Flow Vectors")
+	plt.xlabel("Optical Flow Magnitude")
+	plt.ylabel("Frame Number (middle is location of predicted event)")
+
+	if(args.saveimgs):
+		plt.savefig(name + "-2Dhisto.png")
+
+	if(args.display):
+		plt.show()
+
+		plt.clf()
 
 
 # takes in the video reader and returns the rgb representation of the optical flow, the angle matrix, and the 
@@ -543,24 +598,29 @@ finished_vids = []
 # helpful for A/B testing to compare techniques
 # need_to_check_vid = "GMR_SS00010__UAS_Shi_ts1_3_0001_20130724T123424(5.0_01)_0.avi"
 
-ind = 0
 
 # traverses videos to analyze
 
-for (dirpath, dirname, filenames) in os.walk("analysis-vids"):
-	print(dirpath)
-	count = 0
-	for filename in filenames:
-		print(filename)
+# for (dirpath, dirname, filenames) in os.walk("analysis-vids"):
+# 	print(dirpath)
+# 	count = 0
+# 	for filename in filenames:
+# 		print(filename)
 
-		# can add this as a condition "and filename not in need_to_check_vids[0]" if you want to look at a specific vid
-		if(filename[-5:] == "0.avi" and filename not in finished_vids and dirpath.split("\\")[-1] == "attempt"):
-			x = time.time()
-			readVid(dirpath + "\\" + filename)
-			print(time.time() - x)
-			count += 1
+# 		# can add this as a condition "and filename not in need_to_check_vids[0]" if you want to look at a specific vid
+# 		if(filename[-5:] == "0.avi" and filename not in finished_vids and dirpath.split("\\")[-1] == "attempt"):
+# 			# x = time.time()
+# 			readVid(dirpath + "\\" + filename)
+# 			# print(time.time() - x)
+# 			count += 1
 
 
-		else:
-			"Already finished this vid"
+# 		else:
+# 			"Already finished this vid"
+
+
+
+readVid(args.filename)
+
+
 
