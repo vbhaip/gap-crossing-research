@@ -5,7 +5,7 @@ This project presents a system comprised of two machine learning models to ident
 
 ## Getting Started
 
-This project uses Python 3.6. Install the packages in the requirements.txt file using
+This project has been tested and works with Python 3.6 and 3.7. Install the packages in the requirements.txt file using
 
 ```
 $pip install -r requirements.txt
