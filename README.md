@@ -15,7 +15,7 @@ $pip install -r requirements.txt
 
 Standard usage for running classification model on video file and extracting analysis from locations that are predicted to be gap-crossing events.
 ```
-$python analysis.py [-h] [--saveimgs] [--display] [--savevid] filename
+$python analysis.py [-h] [--saveimgs] [--display] [--savevid] [--framerate FRAMERATE] filename
 ```
 
 To see the specific usage of each parameter, run:
@@ -27,10 +27,10 @@ $python analysis.py --help
 ### Example Usage
 
 ```
-$python analysis.py sample-videos/cross1.avi --saveimgs
+$python analysis.py sample-videos/cross1.avi --saveimgs --framerate 10
 ```
 
-This command looks for gap-crossing events in the cross1.avi file and saves the output analysis images at events. These saved images are the augmented optical flow image with the ellipse over the fly, the cumulative sum plot, and the 2D histogram of the magnitudes of the optical flow vectors across time.
+This command looks for gap-crossing events at 10 frame intervals in the cross1.avi file and saves the output analysis images at events. These saved images are the augmented optical flow image with the ellipse over the fly, the cumulative sum plot, and the 2D histogram of the magnitudes of the optical flow vectors across time.
 
 ```
 $python analysis.py sample-videos/dir1.avi --display --savevid

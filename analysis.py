@@ -42,10 +42,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--saveimgs", help="save figures to files", action="store_true")
 parser.add_argument("--display", help="display any figures to the terminal (slows it down a lot)", action="store_true")
 parser.add_argument("--savevid", help="saves vid w/ center of mass drawn over", action="store_true")
+parser.add_argument("--framerate", help="sets the sampling rate for running the model and analysis - default is 30", type=int)
 parser.add_argument("filename", type=str,
                     help="specify avi file location to access")
 
 args = parser.parse_args()
+
+print(args)
 
 
 #just some random seed to keep it consistent when testing
@@ -60,6 +63,9 @@ FRAMECTX = 5
 
 
 FRAME_MEASURE_LENGTH = 30
+
+if args.framerate:
+	FRAME_MEASURE_LENGTH = args.framerate
 
 IMG_WIDTH = 1024
 IMG_HEIGHT = 512
