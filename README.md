@@ -42,6 +42,7 @@ This command looks for gap-crossing events in the dir1.avi file and displays the
 ## Author
 
 [**Vinay Bhaip**](https://github.com/vbhaip)
+
 Mentors: Hannah Haberkern, Daniel Turner-Evans
 
-This project was completed under the [Jayaraman Lab](janelia.org/lab/jayaraman-lab).
+This project was completed under the [Jayaraman Lab](https://janelia.org/lab/jayaraman-lab).
