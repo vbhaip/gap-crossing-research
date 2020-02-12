@@ -39,6 +39,14 @@ $python analysis.py sample-videos/dir1.avi --display --savevid
 This command looks for gap-crossing events in the dir1.avi file and displays the output analysis images using Matplotlib (note that displaying the images takes time). This will also save an augmented video cropped around the gap-crossing event with the predicted center of mass overlayed.
 
 
+### Notes
+
+The other files in this repository were used for data pre-processing and making the model and classification system. The file of the most importance is the analysis.py file.
+
+I've provided 3 sample videos to test the program out on. They correspond to files for a failed attempt at gap-crossing, a successful attempt at gap-crossing, and an attempt off-target at gap-crossing. To view these videos, I recommend using [VLC](https://www.videolan.org/vlc/).
+
+
+
 ## Author
 
 [**Vinay Bhaip**](https://github.com/vbhaip)
