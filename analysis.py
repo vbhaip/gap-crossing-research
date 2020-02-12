@@ -171,7 +171,7 @@ def readVid(vid_name):
 					name = vid_name.split("/")[-1].split(".")[0] + "-accuracy-" + str(abs(pred2[0] + pred[0])/2.0) + "-angle-" + str(avg_ang)
 					
 
-					
+
 					if(args.savevid):
 						new_vid = cv2.VideoWriter(name + ".avi", cv2.VideoWriter_fourcc(*'XVID'), 15.0, (int(cap.get(3)), int(cap.get(4))))
 
@@ -426,7 +426,8 @@ def eigenEllipseFitting(matrix, name):
 
 	if(args.display):
 		plt.show()
-		plt.clf()
+		
+	plt.clf()
 
 	
 
@@ -452,7 +453,7 @@ def genSumPlot(matrix, name):
 	if(args.display):
 		plt.show()
 
-		plt.clf()
+	plt.clf()
 
 
 
@@ -507,7 +508,7 @@ def genHisto2D(matrix, name):
 	if(args.display):
 		plt.show()
 
-		plt.clf()
+	plt.clf()
 
 
 # takes in the video reader and returns the rgb representation of the optical flow, the angle matrix, and the 
