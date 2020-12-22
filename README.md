@@ -1,5 +1,7 @@
 # Gap-Crossing Video Analysis
 
+Check out the paper for this project [here](https://vinaybhaip.com/gap-crossing-paper.pdf).
+
 This project presents a system comprised of two machine learning models to identify locations of gap-crossing events. The project them employs computer vision techniques to identify the center of mass and the direction of the fly during these gap-crossing events. The system achieves an optimal accuracy of 84% on identifying frames with attempts and is used to analyze the decision making processes of flies across various genotypes. The goal of this project is to apply this classification system to existing videos to gain meaningful analysis of different genotypes that affect decision-making processes in the fruit fly.
 
 
